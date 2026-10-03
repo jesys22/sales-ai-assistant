@@ -1,7 +1,6 @@
 from functools import lru_cache
 
 import structlog
-from sentence_transformers import SentenceTransformer
 
 logger = structlog.get_logger()
 
@@ -9,18 +8,17 @@ MODEL_NAME = "intfloat/multilingual-e5-large"
 
 
 @lru_cache(maxsize=1)
-def get_model() -> SentenceTransformer:
+def get_model():
+    # Импорт внутри функции — чтобы не грузить sentence-transformers при импорте модуля
+    from sentence_transformers import SentenceTransformer
+
     logger.info("loading_embedding_model", model=MODEL_NAME)
     model = SentenceTransformer(MODEL_NAME)
-    logger.info("embedding_model_loaded", dim=model.get_sentence_embedding_dimension())
+    logger.info("embedding_model_loaded", dim=model.get_embedding_dimension())
     return model
 
 
 def embed_texts(texts: list[str], is_query: bool = False) -> list[list[float]]:
-    """Возвращает эмбеддинги для списка текстов.
-
-    Для e5-моделей важно префиксовать текст: 'query: ' для запроса, 'passage: ' для документов.
-    """
     model = get_model()
     prefix = "query: " if is_query else "passage: "
     prefixed = [f"{prefix}{t}" for t in texts]
