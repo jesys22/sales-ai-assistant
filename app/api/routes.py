@@ -1,6 +1,7 @@
 import re
 import time
 import uuid
+from typing import Annotated
 
 import structlog
 from fastapi import APIRouter, Depends
@@ -24,7 +25,7 @@ def clean_title(title: str) -> str:
 @router.post("/ask", response_model=AskResponse)
 async def ask(
     request: AskRequest,
-    session: AsyncSession = Depends(get_session),
+    session: Annotated[AsyncSession, Depends(get_session)],
 ) -> AskResponse:
     request_id = str(uuid.uuid4())
     start = time.perf_counter()

@@ -45,7 +45,7 @@ async def index_documents():
         await session.commit()
         print("Cleared old documents")
 
-        for chunk, emb in zip(all_chunks, embeddings):
+        for chunk, emb in zip(all_chunks, embeddings, strict=True):
             doc = Document(
                 title=chunk["title"],
                 content=chunk["content"],

@@ -25,7 +25,7 @@ async def test():
         print(f"    {r['content'][:120]}...")
 
     reranked = rerank_by_keywords(query, results, top_n=2)
-    print(f"\nAfter reranking (top 2):")
+    print("\nAfter reranking (top 2):")
     for r in reranked:
         print(f"  - {r['title']} (score: {r['score']})")
 
