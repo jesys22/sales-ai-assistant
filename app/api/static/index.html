@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales AI Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="bg-slate-900 text-slate-100 h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-slate-800 border-b border-slate-700 px-6 py-3 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-lg">
+        🤖
+      </div>
+      <div>
+        <h1 class="font-semibold text-base">Sales AI Assistant</h1>
+        <p class="text-xs text-slate-400">RAG + Qwen 2.5 Coder · локальный контур</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-4 text-xs text-slate-400">
+      <span class="flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+        API: online
+      </span>
+      <button onclick="clearChat()" class="text-slate-400 hover:text-white border border-slate-600 hover:border-slate-400 px-3 py-1.5 rounded transition">
+        Очистить
+      </button>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="flex-1 flex overflow-hidden">
+
+    <!-- Chat -->
+    <section class="flex-[2] flex flex-col border-r border-slate-700">
+      <div id="messages" class="flex-1 overflow-y-auto p-6 space-y-4">
+        <div class="flex gap-3">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-sm flex-shrink-0">🤖</div>
+          <div class="bg-slate-800 rounded-2xl rounded-tl-sm px-4 py-3 max-w-2xl">
+            <p class="text-sm leading-relaxed">Здравствуйте! Я AI-ассистент отдела продаж. Отвечаю на вопросы клиентов на основе базы знаний: доставка, возврат, оплата, каталог. Задайте вопрос или выберите готовый ниже.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 bg-slate-800 border-t border-slate-700">
+        <div class="flex gap-2">
+          <input
+            id="question"
+            type="text"
+            placeholder="Напишите вопрос клиента..."
+            class="flex-1 bg-slate-900 border border-slate-600 focus:border-blue-500 rounded-lg px-4 py-3 text-sm outline-none transition"
+            onkeypress="if(event.key==='Enter') sendQuestion()"
+          >
+          <button
+            id="sendBtn"
+            onclick="sendQuestion()"
+            class="bg-gradient-to-r from-blue-500 to-purple-600 hover:opacity-90 px-6 py-3 rounded-lg font-medium text-sm transition disabled:opacity-50"
+          >
+            Отправить
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sidebar -->
+    <aside class="flex-1 bg-slate-800 overflow-y-auto p-6 flex flex-col gap-6">
+
+      <div>
+        <h2 class="text-xs uppercase text-slate-400 font-semibold tracking-wider mb-3">⚡ Быстрые вопросы</h2>
+        <div class="space-y-2">
+          <button onclick="askQuick('Сколько стоит доставка в Москву?')" class="w-full text-left bg-slate-900 hover:bg-slate-700 border border-slate-700 hover:border-blue-500 rounded-lg px-4 py-2.5 text-sm transition">
+            Сколько стоит доставка в Москву?
+          </button>
+          <button onclick="askQuick('Как вернуть товар?')" class="w-full text-left bg-slate-900 hover:bg-slate-700 border border-slate-700 hover:border-blue-500 rounded-lg px-4 py-2.5 text-sm transition">
+            Как вернуть товар?
+          </button>
+          <button onclick="askQuick('Какие есть наушники?')" class="w-full text-left bg-slate-900 hover:bg-slate-700 border border-slate-700 hover:border-blue-500 rounded-lg px-4 py-2.5 text-sm transition">
+            Какие есть наушники?
+          </button>
+          <button onclick="askQuick('Можно оплатить картой?')" class="w-full text-left bg-slate-900 hover:bg-slate-700 border border-slate-700 hover:border-blue-500 rounded-lg px-4 py-2.5 text-sm transition">
+            Можно оплатить картой?
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="text-xs uppercase text-slate-400 font-semibold tracking-wider mb-3">📚 Источники ответа</h2>
+        <div id="sources" class="space-y-2">
+          <p class="text-sm text-slate-500 italic">Задайте вопрос — здесь появятся документы, на основе которых построен ответ.</p>
+        </div>
+      </div>
+
+      <div class="mt-auto">
+        <h2 class="text-xs uppercase text-slate-400 font-semibold tracking-wider mb-3">📊 Метрики</h2>
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="bg-slate-900 rounded-lg p-3 border border-slate-700">
+            <div class="text-slate-500 mb-1">Latency</div>
+            <div id="metric-latency" class="text-lg font-semibold text-blue-400">—</div>
+          </div>
+          <div class="bg-slate-900 rounded-lg p-3 border border-slate-700">
+            <div class="text-slate-500 mb-1">Agent</div>
+            <div id="metric-agent" class="text-lg font-semibold text-purple-400">—</div>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

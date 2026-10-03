@@ -1,59 +1,86 @@
-# Import necessary libraries and functions
 import time
+from contextlib import asynccontextmanager
+
+import structlog
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-import structlog
-from contextlib import asynccontextmanager
-def get_settings():
-    from app.config import Settings
-    return Settings()
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
-# Configure structlog to use JSON format and log level from settings
-logger = structlog.get_logger()
+from app.api.routes import router as api_router
+from app.config import get_settings
+
+settings = get_settings()
+
+# Настройка structlog с JSON-форматом
 structlog.configure(
     processors=[
-        structlog.processors.TimeStamper(fmt='iso'),
+        structlog.processors.add_log_level,
+        structlog.processors.TimeStamper(fmt="iso"),
+        structlog.processors.format_exc_info,
         structlog.processors.JSONRenderer(),
     ],
+    logger_factory=structlog.PrintLoggerFactory(),
+    cache_logger_on_first_use=True,
 )
 
-app = FastAPI(title="Sales AI Assistant", version="0.1.0")
+logger = structlog.get_logger()
 
-# Add CORS middleware
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info("Application started", env=settings.app_env)
+    yield
+    logger.info("Application stopped")
+
+
+app = FastAPI(
+    title="Sales AI Assistant",
+    version="0.1.0",
+    lifespan=lifespan,
+)
+
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Lifespan hook for logging application start and stop
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    logger.info("Application started")
-    yield
-    logger.info("Application stopped")
 
-app.lifespan = lifespan
-
-# Middleware to log incoming requests
+# Middleware для логирования запросов
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
-    start_time = time.time()
+    start_time = time.perf_counter()
     response = await call_next(request)
-    process_time = (time.time() - start_time) * 1000
+    duration_ms = (time.perf_counter() - start_time) * 1000
     logger.info(
-        "HTTP request",
+        "http_request",
         method=request.method,
         path=request.url.path,
-        duration=process_time,
+        status=response.status_code,
+        duration_ms=round(duration_ms, 2),
     )
     return response
 
-# Health check endpoint
+
+# Health check
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
-from app.api.routes import router as api_router
 
+
+# API routes
 app.include_router(api_router, prefix="/api", tags=["ask"])
+
+
+# Раздача статики
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
+# Корневой эндпоинт — отдаёт UI
+@app.get("/", include_in_schema=False)
+async def root():
+    return FileResponse("static/index.html")
