@@ -54,3 +54,6 @@ async def log_requests(request: Request, call_next):
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
+from app.api.routes import router as api_router
+
+app.include_router(api_router, prefix="/api", tags=["ask"])
