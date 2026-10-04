@@ -17,6 +17,7 @@ class AskResponse(BaseModel):
     sources: list[SourceItem] = []
     agent: str
     latency_ms: float
+    confidence: float = 0.0
 
 
 class HealthResponse(BaseModel):

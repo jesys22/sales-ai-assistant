@@ -72,6 +72,9 @@ async def ask(
         for c in top_chunks
     ]
 
+    # 7. Рассчитываем confidence как средний score из top_chunks
+    confidence = sum(c["score"] for c in top_chunks) / len(top_chunks) if top_chunks else 0.0
+
     logger.info(
         "ask_response",
         request_id=request_id,
@@ -84,4 +87,5 @@ async def ask(
         sources=sources,
         agent=agent_name,
         latency_ms=round(latency_ms, 2),
+        confidence=confidence,
     )
