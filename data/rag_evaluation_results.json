@@ -1,0 +1,211 @@
+{
+  "summary": {
+    "semantic_similarity": 0.9669,
+    "keyword_recall": 0.7699,
+    "keyword_precision": 0.7839,
+    "retrieval_hit_rate": 0.95,
+    "total_questions": 20
+  },
+  "details": [
+    {
+      "question": "Сколько стоит доставка в Москву?",
+      "answer": "Доставка в Москву и МО стоит 300 рублей.",
+      "ground_truth": "Доставка в Москву и Московскую область стоит 300 рублей. Бесплатно при заказе от 5000 рублей.",
+      "semantic_similarity": 0.9246,
+      "keyword_recall": 0.5,
+      "keyword_precision": 1.0,
+      "retrieval_hit": 1.0,
+      "latency_ms": null
+    },
+    {
+      "question": "Можно ли вернуть товар через 10 дней?",
+      "answer": "Да, возврат возможен в течение 14 дней с момента получения заказа.",
+      "ground_truth": "Да, возврат возможен в течение 14 дней с момента получения заказа.",
+      "semantic_similarity": 1.0,
+      "keyword_recall": 1.0,
+      "keyword_precision": 1.0,
+      "retrieval_hit": 1.0,
+      "latency_ms": null
+    },
+    {
+      "question": "Какие способы оплаты вы принимаете?",
+      "answer": "Мы принимаем следующие способы оплаты:\n- Банковская карта (Visa, MasterCard, МИР)\n- СБП (Система быстрых платежей)\n- Наличными при получении\n- Рассрочка от Тинькофф (для заказов от 10 000 рублей)",
+      "ground_truth": "Принимаем банковские карты (Visa, MasterCard, МИР), СБП, наличные при получении и рассрочку от Тинькофф для заказов от 10 000 рублей.",
+      "semantic_similarity": 0.9706,
+      "keyword_recall": 0.7143,
+      "keyword_precision": 0.5,
+      "retrieval_hit": 1.0,
+      "latency_ms": null
+    },
+    {
+      "question": "Что делать, если я хочу купить наушники и чехол вместе?",
+      "answer": "Если вы хотите купить наушники X и чехол Y для них вместе, при оформлении заказа применится скидка 10%.",
+      "ground_truth": "При покупке наушников X и чехла Y вместе предоставляется скидка 10%.",
+      "semantic_similarity": 0.9753,
+      "keyword_recall": 0.3333,
+      "keyword_precision": 0.2222,
+      "retrieval_hit": 1.0,
+      "latency_ms": null
+    },
+    {
+      "question": "Есть ли у вас самовывоз?",
+      "answer": "Да, есть возможность самовывоза из пунктов выдачи. Стоимость доставки при самовывозе — бесплатно.",
+      "ground_truth": "Да, самовывоз из пунктов выдачи бесплатный.",
+      "semantic_similarity": 0.8917,
+      "keyword_recall": 0.5,
+      "keyword_precision": 0.25,
+      "retrieval_hit": 1.0,
+      "latency_ms": null
+    },
+    {
+      "question": "Сколько идёт доставка в Санкт-Петербург?",
+      "answer": "Доставка в Санкт-Петербург занимает 2-3 рабочих дня.",
+      "ground_truth": "Доставка в Санкт-Петербург занимает 2-3 рабочих дня.",
+      "semantic_similarity": 1.0,
+      "keyword_recall": 1.0,
+      "keyword_precision": 1.0,
+      "retrieval_hit": 1.0,
+      "latency_ms": null
+    },
+    {
+      "question": "Сколько стоит доставка в регионы?",
+      "answer": "Стоимость доставки в регионы РФ составляет 500 рублей.",
+      "ground_truth": "Доставка в регионы РФ стоит 500 рублей и занимает 3-7 рабочих дней.",
+      "semantic_similarity": 0.9653,
+      "keyword_recall": 0.375,
+      "keyword_precision": 0.5,
+      "retrieval_hit": 1.0,
+      "latency_ms": null
+    },
+    {
+      "question": "При какой сумме заказа доставка бесплатная?",
+      "answer": "Доставка бесплатна при заказе от 5000 рублей.",
+      "ground_truth": "Доставка бесплатна при заказе от 5000 рублей.",
+      "semantic_similarity": 1.0,
+      "keyword_recall": 1.0,
+      "keyword_precision": 1.0,
+      "retrieval_hit": 1.0,
+      "latency_ms": null
+    },
+    {
+      "question": "Какие наушники есть в вашем каталоге?",
+      "answer": "В нашем каталоге есть следующие наушники:\n1. Беспроводные наушники X - 3000 рублей\n2. Наушники Z Pro - 5000 рублей",
+      "ground_truth": "В каталоге есть беспроводные наушники X за 3000 рублей и наушники Z Pro за 5000 рублей.",
+      "semantic_similarity": 0.9715,
+      "keyword_recall": 1.0,
+      "keyword_precision": 0.7778,
+      "retrieval_hit": 1.0,
+      "latency_ms": null
+    },
+    {
+      "question": "Сколько стоят наушники Z Pro?",
+      "answer": "Наушники Z Pro стоят 5000 рублей.",
+      "ground_truth": "Наушники Z Pro стоят 5000 рублей.",
+      "semantic_similarity": 1.0,
+      "keyword_recall": 1.0,
+      "keyword_precision": 1.0,
+      "retrieval_hit": 1.0,
+      "latency_ms": null
+    },
+    {
+      "question": "Есть ли у наушников Z Pro защита от воды?",
+      "answer": "Да, наушники Z Pro имеют водозащиту IPX5.",
+      "ground_truth": "Да, наушники Z Pro имеют водозащиту IPX5.",
+      "semantic_similarity": 1.0,
+      "keyword_recall": 1.0,
+      "keyword_precision": 1.0,
+      "retrieval_hit": 1.0,
+      "latency_ms": null
+    },
+    {
+      "question": "Какая скидка при покупке наушников и чехла вместе?",
+      "answer": "При покупке наушников + чехла вместе — скидка 10%.",
+      "ground_truth": "При покупке наушников и чехла вместе предоставляется скидка 10%.",
+      "semantic_similarity": 0.9676,
+      "keyword_recall": 0.8333,
+      "keyword_precision": 1.0,
+      "retrieval_hit": 1.0,
+      "latency_ms": null
+    },
+    {
+      "question": "Сколько времени даётся на возврат товара?",
+      "answer": "Возврат возможен в течение 14 дней с момента получения заказа.",
+      "ground_truth": "Возврат возможен в течение 14 дней с момента получения заказа.",
+      "semantic_similarity": 1.0,
+      "keyword_recall": 1.0,
+      "keyword_precision": 1.0,
+      "retrieval_hit": 1.0,
+      "latency_ms": null
+    },
+    {
+      "question": "За сколько дней вернутся деньги на карту после возврата?",
+      "answer": "На карту деньги вернутся 3-5 рабочих дней после одобрения возврата.",
+      "ground_truth": "Возврат на карту занимает 3-5 рабочих дней после одобрения возврата.",
+      "semantic_similarity": 0.989,
+      "keyword_recall": 0.7143,
+      "keyword_precision": 0.7143,
+      "retrieval_hit": 1.0,
+      "latency_ms": null
+    },
+    {
+      "question": "Можно ли обменять товар бесплатно?",
+      "answer": "Да, обмен товара производится бесплатно в течение 14 дней.",
+      "ground_truth": "Да, обмен товара производится бесплатно в течение 14 дней.",
+      "semantic_similarity": 1.0,
+      "keyword_recall": 1.0,
+      "keyword_precision": 1.0,
+      "retrieval_hit": 1.0,
+      "latency_ms": null
+    },
+    {
+      "question": "Какие условия для возврата товара?",
+      "answer": "Условия возврата:\n- Товар не был в использовании\n- Сохранена оригинальная упаковка\n- Есть чек или подтверждение покупки\n- Товар не входит в список невозвратных",
+      "ground_truth": "Товар не был в использовании, сохранена оригинальная упаковка, есть чек или подтверждение покупки, товар не входит в список невозвратных.",
+      "semantic_similarity": 0.9422,
+      "keyword_recall": 1.0,
+      "keyword_precision": 0.8462,
+      "retrieval_hit": 1.0,
+      "latency_ms": null
+    },
+    {
+      "question": "Можно ли оплатить через СБП?",
+      "answer": "Да, можно оплатить через СБП (Систему быстрых платежей).",
+      "ground_truth": "Да, оплата через СБП доступна.",
+      "semantic_similarity": 0.9263,
+      "keyword_recall": 0.3333,
+      "keyword_precision": 0.2,
+      "retrieval_hit": 1.0,
+      "latency_ms": null
+    },
+    {
+      "question": "Берёте ли вы комиссию при оплате наличными курьеру?",
+      "answer": "Комиссия при оплате наличными курьеру не взимается.",
+      "ground_truth": "Нет, при оплате наличными курьеру комиссия не взимается.",
+      "semantic_similarity": 0.9592,
+      "keyword_recall": 1.0,
+      "keyword_precision": 1.0,
+      "retrieval_hit": 1.0,
+      "latency_ms": null
+    },
+    {
+      "question": "Можно ли оформить рассрочку?",
+      "answer": "Да, можно оформить рассрочку от Тинькофф для заказов от 10 000 рублей.",
+      "ground_truth": "Да, рассрочка от Тинькофф доступна для заказов от 10 000 рублей.",
+      "semantic_similarity": 0.993,
+      "keyword_recall": 0.6667,
+      "keyword_precision": 0.6667,
+      "retrieval_hit": 1.0,
+      "latency_ms": null
+    },
+    {
+      "question": "У вас есть iPhone 17?",
+      "answer": "Уточню информацию у коллег.",
+      "ground_truth": "Такого товара сейчас нет в наличии. Уточню информацию у коллег.",
+      "semantic_similarity": 0.8616,
+      "keyword_recall": 0.4286,
+      "keyword_precision": 1.0,
+      "retrieval_hit": 0.0,
+      "latency_ms": null
+    }
+  ]
+}
