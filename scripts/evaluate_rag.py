@@ -6,11 +6,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from app.db.session import async_session_maker
-from app.rag.embeddings import embed_texts
-from app.rag.retriever import search_similar
-from app.agents.qa_agent import generate_answer
-
+# noqa: E402 — импорты после sys.path.insert нужны для доступа к app.*
+from app.agents.qa_agent import generate_answer  # noqa: E402
+from app.db.session import async_session_maker  # noqa: E402
+from app.rag.embeddings import embed_query, embed_texts  # noqa: E402
+from app.rag.retriever import search_similar  # noqa: E402
 
 # Стоп-слова — не считаем их в keyword-метриках
 STOPWORDS = {
@@ -36,14 +36,14 @@ STOPWORDS = {
 
 
 def tokenize(text: str) -> set[str]:
-    """Приводит текст к нижнему регистру, убирает пунктуацию, стоп-слова."""
+    """Приводит текст к нижнему регистру, убирает пунктуацию и стоп-слова."""
     words = re.findall(r"\b[а-яёa-z0-9]+\b", text.lower())
     return {w for w in words if w not in STOPWORDS and len(w) > 2}
 
 
 def cosine_similarity(a: list[float], b: list[float]) -> float:
     """Косинусное сходство двух векторов."""
-    dot = sum(x * y for x, y in zip(a, b))
+    dot = sum(x * y for x, y in zip(a, b, strict=True))
     norm_a = sum(x * x for x in a) ** 0.5
     norm_b = sum(y * y for y in b) ** 0.5
     if norm_a == 0 or norm_b == 0:
@@ -51,8 +51,8 @@ def cosine_similarity(a: list[float], b: list[float]) -> float:
     return dot / (norm_a * norm_b)
 
 
-async def evaluate():
-    with open("data/golden_set.json", "r", encoding="utf-8") as f:
+async def evaluate() -> None:
+    with open("data/golden_set.json", encoding="utf-8") as f:
         golden_set = json.load(f)
 
     print(f"Загружено {len(golden_set)} вопросов\n")
@@ -65,10 +65,9 @@ async def evaluate():
             ground_truth = item["ground_truth"]
             expected_contexts = item.get("contexts", [])
 
-            print(f"[{i+1}/{len(golden_set)}] {question[:60]}...")
+            print(f"[{i + 1}/{len(golden_set)}] {question[:60]}...")
 
             # 1. Поиск в векторной БД
-            from app.rag.embeddings import embed_query
             query_emb = embed_query(question)
             candidates = await search_similar(session, query_emb, top_k=5)
             found_contexts = [c["content"] for c in candidates]
@@ -77,7 +76,7 @@ async def evaluate():
             context_text = "\n\n".join(found_contexts)
             answer = await generate_answer(question, context_text)
 
-            # ===== МЕТРИКА 1: Semantic similarity (через e5-large) =====
+            # ===== МЕТРИКА 1: Semantic similarity =====
             embs = embed_texts([answer, ground_truth], is_query=False)
             semantic_sim = cosine_similarity(embs[0], embs[1])
 
@@ -91,25 +90,26 @@ async def evaluate():
             # ===== МЕТРИКА 3: Keyword Precision =====
             precision = (
                 len(gt_words & answer_words) / len(answer_words)
-                if answer_words else 0.0
+                if answer_words
+                else 0.0
             )
 
             # ===== МЕТРИКА 4: Retrieval Hit Rate =====
-            # Проверяем: есть ли в найденных чанках ключевые слова из ожидаемого контекста
             expected_words = tokenize(" ".join(expected_contexts))
             found_words = tokenize(" ".join(found_contexts))
             hit = 1.0 if expected_words & found_words else 0.0
 
-            results.append({
-                "question": question,
-                "answer": answer,
-                "ground_truth": ground_truth,
-                "semantic_similarity": round(semantic_sim, 4),
-                "keyword_recall": round(recall, 4),
-                "keyword_precision": round(precision, 4),
-                "retrieval_hit": hit,
-                "latency_ms": None,  # можно добавить позже
-            })
+            results.append(
+                {
+                    "question": question,
+                    "answer": answer,
+                    "ground_truth": ground_truth,
+                    "semantic_similarity": round(semantic_sim, 4),
+                    "keyword_recall": round(recall, 4),
+                    "keyword_precision": round(precision, 4),
+                    "retrieval_hit": hit,
+                }
+            )
 
     # ===== ИТОГОВЫЕ МЕТРИКИ =====
     n = len(results)
@@ -121,33 +121,41 @@ async def evaluate():
     print("\n" + "=" * 60)
     print("РЕЗУЛЬТАТЫ ОЦЕНКИ RAG")
     print("=" * 60)
-    print(f"Semantic Similarity:  {avg_sem:.4f}   (ответ vs эталон по смыслу)")
-    print(f"Keyword Recall:       {avg_recall:.4f}   (сколько фактов из эталона попало в ответ)")
-    print(f"Keyword Precision:    {avg_precision:.4f}   (сколько слов ответа есть в эталоне)")
-    print(f"Retrieval Hit Rate:   {avg_hit:.4f}   (доля вопросов, где поиск нашёл релевантный чанк)")
+    print(f"Semantic Similarity:  {avg_sem:.4f}")
+    print(f"Keyword Recall:       {avg_recall:.4f}")
+    print(f"Keyword Precision:    {avg_precision:.4f}")
+    print(f"Retrieval Hit Rate:   {avg_hit:.4f}")
     print("=" * 60)
 
-    # Сохраняем детальные результаты
-    with open("data/rag_evaluation_results.json", "w", encoding="utf-8") as f:
-        json.dump({
-            "summary": {
-                "semantic_similarity": round(avg_sem, 4),
-                "keyword_recall": round(avg_recall, 4),
-                "keyword_precision": round(avg_precision, 4),
-                "retrieval_hit_rate": round(avg_hit, 4),
-                "total_questions": n,
+    output_path = "data/rag_evaluation_results.json"
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(
+            {
+                "summary": {
+                    "semantic_similarity": round(avg_sem, 4),
+                    "keyword_recall": round(avg_recall, 4),
+                    "keyword_precision": round(avg_precision, 4),
+                    "retrieval_hit_rate": round(avg_hit, 4),
+                    "total_questions": n,
+                },
+                "details": results,
             },
-            "details": results,
-        }, f, ensure_ascii=False, indent=2)
+            f,
+            ensure_ascii=False,
+            indent=2,
+        )
 
-    print(f"\nДетальные результаты → data/rag_evaluation_results.json")
+    print(f"\nДетальные результаты → {output_path}")
 
     # Разбор провалов
     print("\nПровальные случаи (semantic_similarity < 0.75):")
-    for r in results:
-        if r["semantic_similarity"] < 0.75:
-            print(f"  ⚠ {r['question'][:60]}")
-            print(f"     sim={r['semantic_similarity']}, recall={r['keyword_recall']}")
+    fails = [r for r in results if r["semantic_similarity"] < 0.75]
+    if not fails:
+        print("  Нет провалов — все вопросы отвечены корректно")
+    else:
+        for r in fails:
+            print(f"  - {r['question'][:60]}")
+            print(f"    sim={r['semantic_similarity']}, recall={r['keyword_recall']}")
 
 
 if __name__ == "__main__":
